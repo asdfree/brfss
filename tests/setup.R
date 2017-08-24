@@ -6,8 +6,8 @@ brfss_cat <-
 	get_catalog( "brfss" ,
 		output_dir = file.path( getwd() ) )
 
-# sample 50% of the records
-which_records <- sample( seq( nrow( brfss_cat ) ) , round( nrow( brfss_cat ) * 0.50 ) )
+# sample 75% of the records
+which_records <- sample( seq( nrow( brfss_cat ) ) , round( nrow( brfss_cat ) * 0.75 ) )
 
 # always sample year == 2015
 brfss_cat <- unique( rbind( brfss_cat[ which_records , ] , subset( brfss_cat , year == 2015 ) ) )
