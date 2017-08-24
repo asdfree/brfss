@@ -19,7 +19,7 @@ brfss_df <-
 	readRDS( file.path( getwd() , "2015 main.rds" ) )
 
 variables_to_keep <-
-	c( 'xpsu' , 'xststr' , 'xllcpwt' , 'genhlth' , 'medcost' , 
+	c( 'one' , 'xpsu' , 'xststr' , 'xllcpwt' , 'genhlth' , 'medcost' , 
 	'xstate' , 'xage80' , 'nummen' , 'numadult' , 'hlthpln1' )
 	
 brfss_df <- brfss_df[ variables_to_keep ] ; gc()
