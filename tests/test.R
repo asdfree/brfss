@@ -137,7 +137,7 @@ svymean( ~ xage80 , brfss_design , deff = TRUE )
 # SRS with replacement
 svymean( ~ xage80 , brfss_design , deff = "replace" )
 svyciprop( ~ fair_or_poor_health , brfss_design ,
-	method = "likelihood" )
+	method = "likelihood" , na.rm = TRUE )
 svyttest( xage80 ~ fair_or_poor_health , brfss_design )
 svychisq( 
 	~ fair_or_poor_health + could_not_see_doctor_due_to_cost , 
