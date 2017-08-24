@@ -15,16 +15,35 @@ options( survey.lonely.psu = "adjust" )
 
 library(survey)
 
-brfss_design <- readRDS( file.path( getwd() , "2015 design.rds" ) )
+brfss_df <- 
+	readRDS( file.path( getwd() , "2015 main.rds" ) )
+
+variables_to_keep <-
+	c( 'xpsu' , 'xststr' , 'xllcpwt' , 'genhlth' , 'medcost' , 
+	'xstate' , 'xage80' , 'nummen' , 'numadult' , 'hlthpln1' )
+	
+brfss_df <- brfss_df[ variables_to_keep ] ; gc()
+	
+brfss_design <-
+	svydesign(
+		id = ~ one ,
+		strata = ~ xststr ,
+		data = brfss_df ,
+		weight = ~ xllcpwt ,
+		nest = TRUE
+	)
 brfss_design <- 
 	update( 
 		brfss_design ,
 		
 		fair_or_poor_health = ifelse( genhlth %in% 1:5 , as.numeric( genhlth > 3 ) , NA ) ,
 		
-		could_not_see_doctor_due_to_cost = factor( medcost , levels = c( 1 , 2 , 7 , 9 ) , labels = c( "yes" , "no" , "dk" , "rf" ) ) ,
-		
-		ever_had_heart_attack = factor( cvdinfr4 , levels = 1:2 , labels = c( 'yes' , 'no' ) ) ,
+		could_not_see_doctor_due_to_cost = 
+			factor( 
+				medcost , 
+				levels = c( 1 , 2 , 7 , 9 ) , 
+				labels = c( "yes" , "no" , "dk" , "rf" ) 
+			) ,
 		
 		state_name =
 		
@@ -56,27 +75,27 @@ brfss_design <-
 	)
 sum( weights( brfss_design , "sampling" ) != 0 )
 
-svyby( ~ one , ~ ever_had_heart_attack , brfss_design , unwtd.count )
+svyby( ~ one , ~ state_name , brfss_design , unwtd.count )
 svytotal( ~ one , brfss_design )
 
-svyby( ~ one , ~ ever_had_heart_attack , brfss_design , svytotal )
+svyby( ~ one , ~ state_name , brfss_design , svytotal )
 svymean( ~ xage80 , brfss_design )
 
-svyby( ~ xage80 , ~ ever_had_heart_attack , brfss_design , svymean )
+svyby( ~ xage80 , ~ state_name , brfss_design , svymean )
 svymean( ~ could_not_see_doctor_due_to_cost , brfss_design , na.rm = TRUE )
 
-svyby( ~ could_not_see_doctor_due_to_cost , ~ ever_had_heart_attack , brfss_design , svymean , na.rm = TRUE )
+svyby( ~ could_not_see_doctor_due_to_cost , ~ state_name , brfss_design , svymean , na.rm = TRUE )
 svytotal( ~ xage80 , brfss_design )
 
-svyby( ~ xage80 , ~ ever_had_heart_attack , brfss_design , svytotal )
+svyby( ~ xage80 , ~ state_name , brfss_design , svytotal )
 svytotal( ~ could_not_see_doctor_due_to_cost , brfss_design , na.rm = TRUE )
 
-svyby( ~ could_not_see_doctor_due_to_cost , ~ ever_had_heart_attack , brfss_design , svytotal , na.rm = TRUE )
+svyby( ~ could_not_see_doctor_due_to_cost , ~ state_name , brfss_design , svytotal , na.rm = TRUE )
 svyquantile( ~ xage80 , brfss_design , 0.5 )
 
 svyby( 
 	~ xage80 , 
-	~ ever_had_heart_attack , 
+	~ state_name , 
 	brfss_design , 
 	svyquantile , 
 	0.5 ,
@@ -101,7 +120,7 @@ cv( this_result )
 grouped_result <-
 	svyby( 
 		~ xage80 , 
-		~ ever_had_heart_attack , 
+		~ state_name , 
 		brfss_design , 
 		svymean 
 	)
