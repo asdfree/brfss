@@ -24,6 +24,8 @@ brfss_design <-
 		
 		could_not_see_doctor_due_to_cost = factor( medcost , levels = c( 1 , 2 , 7 , 9 ) , labels = c( "yes" , "no" , "dk" , "rf" ) ) ,
 		
+		ever_had_heart_attack = factor( cvdinfr4 , levels = 1:2 , labels = c( 'yes' , 'no' ) ) ,
+		
 		state_name =
 		
 			factor(
@@ -54,27 +56,27 @@ brfss_design <-
 	)
 sum( weights( brfss_design , "sampling" ) != 0 )
 
-svyby( ~ one , ~ state_name , brfss_design , unwtd.count )
+svyby( ~ one , ~ ever_had_heart_attack , brfss_design , unwtd.count )
 svytotal( ~ one , brfss_design )
 
-svyby( ~ one , ~ state_name , brfss_design , svytotal )
+svyby( ~ one , ~ ever_had_heart_attack , brfss_design , svytotal )
 svymean( ~ xage80 , brfss_design )
 
-svyby( ~ xage80 , ~ state_name , brfss_design , svymean )
+svyby( ~ xage80 , ~ ever_had_heart_attack , brfss_design , svymean )
 svymean( ~ could_not_see_doctor_due_to_cost , brfss_design , na.rm = TRUE )
 
-svyby( ~ could_not_see_doctor_due_to_cost , ~ state_name , brfss_design , svymean , na.rm = TRUE )
+svyby( ~ could_not_see_doctor_due_to_cost , ~ ever_had_heart_attack , brfss_design , svymean , na.rm = TRUE )
 svytotal( ~ xage80 , brfss_design )
 
-svyby( ~ xage80 , ~ state_name , brfss_design , svytotal )
+svyby( ~ xage80 , ~ ever_had_heart_attack , brfss_design , svytotal )
 svytotal( ~ could_not_see_doctor_due_to_cost , brfss_design , na.rm = TRUE )
 
-svyby( ~ could_not_see_doctor_due_to_cost , ~ state_name , brfss_design , svytotal , na.rm = TRUE )
+svyby( ~ could_not_see_doctor_due_to_cost , ~ ever_had_heart_attack , brfss_design , svytotal , na.rm = TRUE )
 svyquantile( ~ xage80 , brfss_design , 0.5 )
 
 svyby( 
 	~ xage80 , 
-	~ state_name , 
+	~ ever_had_heart_attack , 
 	brfss_design , 
 	svyquantile , 
 	0.5 ,
@@ -99,7 +101,7 @@ cv( this_result )
 grouped_result <-
 	svyby( 
 		~ xage80 , 
-		~ state_name , 
+		~ ever_had_heart_attack , 
 		brfss_design , 
 		svymean 
 	)
