@@ -26,7 +26,7 @@ brfss_df <- brfss_df[ variables_to_keep ] ; gc()
 	
 brfss_design <-
 	svydesign(
-		id = ~ one ,
+		id = ~ 1 ,
 		strata = ~ xststr ,
 		data = brfss_df ,
 		weight = ~ xllcpwt ,
