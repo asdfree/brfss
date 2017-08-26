@@ -6,8 +6,8 @@ brfss_cat <-
 	get_catalog( "brfss" ,
 		output_dir = file.path( getwd() ) )
 
-# 2015 only
-brfss_cat <- subset( brfss_cat , year == 2015 )
+# 2016 only
+brfss_cat <- subset( brfss_cat , year == 2016 )
 # download the microdata to your local computer
 stopifnot( nrow( brfss_cat ) > 0 )
 
@@ -16,7 +16,7 @@ options( survey.lonely.psu = "adjust" )
 library(survey)
 
 brfss_df <- 
-	readRDS( file.path( getwd() , "2015 main.rds" ) )
+	readRDS( file.path( getwd() , "2016 main.rds" ) )
 
 variables_to_keep <-
 	c( 'one' , 'xpsu' , 'xststr' , 'xllcpwt' , 'genhlth' , 'medcost' , 
