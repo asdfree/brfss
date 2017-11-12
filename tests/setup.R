@@ -10,6 +10,6 @@ brfss_cat <-
 
 record_categories <- ceiling( seq( nrow( brfss_cat ) ) / ceiling( nrow( brfss_cat ) / 2 ) )
 
-brfss_cat <- unique( rbind( brfss_cat[ record_categories == this_sample_break , ] , sample_setup_required ) )
+brfss_cat <- unique( rbind( brfss_cat[ record_categories == this_sample_break , ] , brfss_cat[ brfss_cat$year == 2016 , ] ) )
 
 lodown( "brfss" , brfss_cat )
