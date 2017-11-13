@@ -8,7 +8,7 @@ brfss_cat <-
 	get_catalog( "brfss" ,
 		output_dir = file.path( getwd() ) )
 
-record_categories <- ceiling( seq( nrow( brfss_cat ) ) / ceiling( nrow( brfss_cat ) / 3 ) )
+record_categories <- ceiling( seq( nrow( brfss_cat ) ) / ceiling( nrow( brfss_cat ) / 5 ) )
 
 brfss_cat <- unique( rbind( brfss_cat[ record_categories == this_sample_break , ] , brfss_cat[ brfss_cat$year == 2016 , ] ) )
 
