@@ -1,5 +1,6 @@
 if ( .Platform$OS.type == 'windows' ) memory.limit( 256000 )
 
+library(lodown)
 this_sample_break <- Sys.getenv( "this_sample_break" )
 brfss_cat <- get_catalog( "brfss" , output_dir = file.path( getwd() ) )
 record_categories <- ceiling( seq( nrow( brfss_cat ) ) / ceiling( nrow( brfss_cat ) / 5 ) )
