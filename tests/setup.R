@@ -1,7 +1,5 @@
 if ( .Platform$OS.type == 'windows' ) memory.limit( 256000 )
 
-library(lodown)
-lodown( "brfss" , output_dir = file.path( getwd() ) )
 this_sample_break <- Sys.getenv( "this_sample_break" )
 brfss_cat <- get_catalog( "brfss" , output_dir = file.path( getwd() ) )
 record_categories <- ceiling( seq( nrow( brfss_cat ) ) / ceiling( nrow( brfss_cat ) / 5 ) )
@@ -17,7 +15,7 @@ brfss_cat <-
 # 2016 only
 brfss_cat <- subset( brfss_cat , year == 2016 )
 # download the microdata to your local computer
-lodown( "brfss" , brfss_cat )
+
 
 options( survey.lonely.psu = "adjust" )
 
