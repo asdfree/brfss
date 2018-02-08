@@ -7,17 +7,17 @@ this_sample_break <- Sys.getenv( "this_sample_break" )
 brfss_cat <- get_catalog( "brfss" , output_dir = file.path( getwd() ) )
 record_categories <- ceiling( seq( nrow( brfss_cat ) ) / ceiling( nrow( brfss_cat ) / 5 ) )
 brfss_cat <- brfss_cat[ record_categories == this_sample_break , ]
-lodown( "brfss" , brfss_cat )
+brfss_cat <- lodown( "brfss" , brfss_cat )
 if( any( brfss_cat$year == 2016 ) ){
-library(lodown)
-# examine all available BRFSS microdata files
-brfss_cat <-
-	get_catalog( "brfss" ,
-		output_dir = file.path( getwd() ) )
 
-# 2016 only
-brfss_cat <- subset( brfss_cat , year == 2016 )
-# download the microdata to your local computer
+
+
+
+
+
+
+
+
 
 
 options( survey.lonely.psu = "adjust" )
