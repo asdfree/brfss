@@ -4,8 +4,11 @@ language: r
 cache: packages
 sudo: false
 
-apt_packages:
-- unixodbc-dev
+addons:
+  apt:
+    packages:
+       - unixodbc-dev
+       - libarchive-dev
 
 r_github_packages:
  - ajdamico/lodown
