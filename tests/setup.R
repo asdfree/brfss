@@ -47,7 +47,7 @@ brfss_design <-
 		
 		fair_or_poor_health = ifelse( genhlth %in% 1:5 , as.numeric( genhlth > 3 ) , NA ) ,
 		
-		could_not_see_doctor_due_to_cost = 
+		couldnt_see_doc_due_to_cost = 
 			factor( 
 				medcost , 
 				levels = c( 1 , 2 , 7 , 9 ) , 
@@ -91,15 +91,15 @@ svyby( ~ one , ~ state_name , brfss_design , svytotal )
 svymean( ~ xage80 , brfss_design )
 
 svyby( ~ xage80 , ~ state_name , brfss_design , svymean )
-svymean( ~ could_not_see_doctor_due_to_cost , brfss_design , na.rm = TRUE )
+svymean( ~ couldnt_see_doc_due_to_cost , brfss_design , na.rm = TRUE )
 
-svyby( ~ could_not_see_doctor_due_to_cost , ~ state_name , brfss_design , svymean , na.rm = TRUE )
+svyby( ~ couldnt_see_doc_due_to_cost , ~ state_name , brfss_design , svymean , na.rm = TRUE )
 svytotal( ~ xage80 , brfss_design )
 
 svyby( ~ xage80 , ~ state_name , brfss_design , svytotal )
-svytotal( ~ could_not_see_doctor_due_to_cost , brfss_design , na.rm = TRUE )
+svytotal( ~ couldnt_see_doc_due_to_cost , brfss_design , na.rm = TRUE )
 
-svyby( ~ could_not_see_doctor_due_to_cost , ~ state_name , brfss_design , svytotal , na.rm = TRUE )
+svyby( ~ couldnt_see_doc_due_to_cost , ~ state_name , brfss_design , svytotal , na.rm = TRUE )
 svyquantile( ~ xage80 , brfss_design , 0.5 )
 
 svyby( 
@@ -149,15 +149,31 @@ svyciprop( ~ fair_or_poor_health , brfss_design ,
 	method = "likelihood" , na.rm = TRUE )
 svyttest( xage80 ~ fair_or_poor_health , brfss_design )
 svychisq( 
-	~ fair_or_poor_health + could_not_see_doctor_due_to_cost , 
+	~ fair_or_poor_health + couldnt_see_doc_due_to_cost , 
 	brfss_design 
 )
 glm_result <- 
 	svyglm( 
-		xage80 ~ fair_or_poor_health + could_not_see_doctor_due_to_cost , 
+		xage80 ~ fair_or_poor_health + couldnt_see_doc_due_to_cost , 
 		brfss_design 
 	)
 
 summary( glm_result )
+
+result <-
+	svymean(
+		~ couldnt_see_doc_due_to_cost ,
+		subset(
+			brfss_design ,
+			couldnt_see_doc_due_to_cost %in%
+				c( 'yes' , 'no' )
+		) ,
+		na.rm = TRUE
+	)
+
+stopifnot( round( confint( result )[ 1 , 1 ] , 3 ) == 0.128 )
+stopifnot( round( confint( result )[ 1 , 2 ] , 3 ) == 0.133 )
+stopifnot( round( confint( result )[ 2 , 1 ] , 3 ) == 0.867 )
+stopifnot( round( confint( result )[ 2 , 2 ] , 3 ) == 0.872 )
 
 }
