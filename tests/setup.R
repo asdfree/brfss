@@ -8,7 +8,7 @@ zip_tf <- tempfile()
 zip_url <-
 	"https://www.cdc.gov/brfss/annual_data/2021/files/LLCP2021XPT.zip"
 	
-download.file( zip_url , zip_tf , mode = 'wb' )
+download.file( zip_url , zip_tf , mode = 'wb' , method = 'curl' )
 
 brfss_tbl <- read_xpt( zip_tf )
 
@@ -42,7 +42,7 @@ brfss_design <-
 		
 		fair_or_poor_health = ifelse( genhlth %in% 1:5 , as.numeric( genhlth > 3 ) , NA ) ,
 		
-		couldnt_see_doc_due_to_cost = 
+		no_doc_visit_due_to_cost = 
 			factor( 
 				medcost1 , 
 				levels = c( 1 , 2 , 7 , 9 ) , 
@@ -86,15 +86,15 @@ svyby( ~ one , ~ state_name , brfss_design , svytotal )
 svymean( ~ x_age80 , brfss_design )
 
 svyby( ~ x_age80 , ~ state_name , brfss_design , svymean )
-svymean( ~ couldnt_see_doc_due_to_cost , brfss_design , na.rm = TRUE )
+svymean( ~ no_doc_visit_due_to_cost , brfss_design , na.rm = TRUE )
 
-svyby( ~ couldnt_see_doc_due_to_cost , ~ state_name , brfss_design , svymean , na.rm = TRUE )
+svyby( ~ no_doc_visit_due_to_cost , ~ state_name , brfss_design , svymean , na.rm = TRUE )
 svytotal( ~ x_age80 , brfss_design )
 
 svyby( ~ x_age80 , ~ state_name , brfss_design , svytotal )
-svytotal( ~ couldnt_see_doc_due_to_cost , brfss_design , na.rm = TRUE )
+svytotal( ~ no_doc_visit_due_to_cost , brfss_design , na.rm = TRUE )
 
-svyby( ~ couldnt_see_doc_due_to_cost , ~ state_name , brfss_design , svytotal , na.rm = TRUE )
+svyby( ~ no_doc_visit_due_to_cost , ~ state_name , brfss_design , svytotal , na.rm = TRUE )
 svyquantile( ~ x_age80 , brfss_design , 0.5 )
 
 svyby( 
@@ -143,12 +143,12 @@ svyciprop( ~ fair_or_poor_health , brfss_design ,
 	method = "likelihood" , na.rm = TRUE )
 svyttest( x_age80 ~ fair_or_poor_health , brfss_design )
 svychisq( 
-	~ fair_or_poor_health + couldnt_see_doc_due_to_cost , 
+	~ fair_or_poor_health + no_doc_visit_due_to_cost , 
 	brfss_design 
 )
 glm_result <- 
 	svyglm( 
-		x_age80 ~ fair_or_poor_health + couldnt_see_doc_due_to_cost , 
+		x_age80 ~ fair_or_poor_health + no_doc_visit_due_to_cost , 
 		brfss_design 
 	)
 
@@ -164,11 +164,11 @@ brfss_srvyr_design %>%
 
 result <-
 	svymean(
-		~ couldnt_see_doc_due_to_cost ,
+		~ no_doc_visit_due_to_cost ,
 		subset(
 			brfss_design ,
 			state_name %in% 'ALASKA' &
-			couldnt_see_doc_due_to_cost %in%
+			no_doc_visit_due_to_cost %in%
 				c( 'yes' , 'no' )
 		) ,
 		na.rm = TRUE
