@@ -41,8 +41,8 @@ brfss_design <-
 # consider performing exploratory analysis as a replication design:
 # coefficients (such as means and medians) do not change
 # standard errors and confidence intervals differ slightly
-brfss_replication_design <-
-	as.svrepdesign( brfss_design )
+# brfss_replication_design <-
+# 	as.svrepdesign( brfss_design )
 brfss_design <- 
 	update( 
 		brfss_design ,
