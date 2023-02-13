@@ -27,9 +27,8 @@ variables_to_keep <-
 	'x_state' , 'x_age80' , 'nummen' , 'numadult' , 'x_hlthpln' )
 	
 brfss_df <- brfss_df[ variables_to_keep ]
-
-# this linearized design matches cdc specifications
-brfss_tsl_design <-
+	
+brfss_design <-
 	svydesign(
 		id = ~ x_psu ,
 		strata = ~ x_ststr ,
@@ -37,20 +36,17 @@ brfss_tsl_design <-
 		weight = ~ x_llcpwt ,
 		nest = TRUE
 	)
-
-# since large linearized survey designs execute slowly,
+	
+# note: since large linearized survey designs execute slowly,
 # consider performing exploratory analysis as a replication design:
-brfss_design <-
-	as.svrepdesign( 
-		brfss_tsl_design 
-		type = 'bootstrap' ,
-		replicates = 100
-	)
-
-# coefficients (such as means and medians) do not change,
-# while standard errors and confidence intervals differ slightly.
-# attempt the commands below with `brfss_tsl_design`
-# to see these minor differences
+# coefficients (such as means and medians) do not change
+# standard errors and confidence intervals differ slightly
+# brfss_replication_design <-
+# 	as.svrepdesign( 
+#	brfss_design ,
+# 	type = 'bootstrap' ,
+#	replicates = 100
+# )
 brfss_design <- 
 	update( 
 		brfss_design ,
@@ -181,7 +177,7 @@ result <-
 	svymean(
 		~ no_doc_visit_due_to_cost ,
 		subset(
-			brfss_tsl_design ,
+			brfss_design ,
 			state_name %in% 'ALASKA' &
 			no_doc_visit_due_to_cost %in%
 				c( 'yes' , 'no' )
