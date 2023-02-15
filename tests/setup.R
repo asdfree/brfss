@@ -1,12 +1,11 @@
-#
-#
-#
+# a cellphone vibrates
+# it's the cdc! asking
+# if you ate veggies
 library(haven)
 
 zip_tf <- tempfile()
 
-zip_url <-
-	"https://www.cdc.gov/brfss/annual_data/2021/files/LLCP2021XPT.zip"
+zip_url <- "https://www.cdc.gov/brfss/annual_data/2021/files/LLCP2021XPT.zip"
 	
 download.file( zip_url , zip_tf , mode = 'wb' )
 
@@ -17,7 +16,6 @@ brfss_df <- data.frame( brfss_tbl )
 names( brfss_df ) <- tolower( names( brfss_df ) )
 
 brfss_df[ , 'one' ] <- 1
-
 options( survey.lonely.psu = "adjust" )
 
 library(survey)
@@ -36,17 +34,15 @@ brfss_design <-
 		weight = ~ x_llcpwt ,
 		nest = TRUE
 	)
-	
-# note: since large linearized survey designs execute slowly,
-# consider performing exploratory analysis as a replication design:
-# coefficients (such as means and medians) do not change
-# standard errors and confidence intervals differ slightly
-# brfss_replication_design <-
-# 	as.svrepdesign( 
-#	brfss_design ,
-# 	type = 'bootstrap' ,
-#	replicates = 100
-# )
+brfss_replication_design <-
+ 	as.svrepdesign( 
+		brfss_design ,
+		type = 'bootstrap'
+	)
+
+system.time( print( svymean( ~ x_age80 , brfss_design ) ) )
+
+system.time( print( svymean( ~ x_age80 , brfss_replication_design ) ) )
 brfss_design <- 
 	update( 
 		brfss_design ,
