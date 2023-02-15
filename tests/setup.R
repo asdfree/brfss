@@ -16,6 +16,9 @@ brfss_df <- data.frame( brfss_tbl )
 names( brfss_df ) <- tolower( names( brfss_df ) )
 
 brfss_df[ , 'one' ] <- 1
+# brfss_fn <- file.path( path.expand( "~" ) , "BRFSS" , "this_file.rds" )
+# saveRDS( brfss_df , file = brfss_fn , compress = FALSE )
+# brfss_df <- readRDS( brfss_fn )
 options( survey.lonely.psu = "adjust" )
 
 library(survey)
@@ -34,15 +37,15 @@ brfss_design <-
 		weight = ~ x_llcpwt ,
 		nest = TRUE
 	)
-brfss_replication_design <-
- 	as.svrepdesign( 
-		brfss_design ,
-		type = 'bootstrap'
-	)
+# brfss_replication_design <-
+# 	as.svrepdesign( 
+# 		brfss_design ,
+# 		type = 'bootstrap'
+# 	)
 
-system.time( print( svymean( ~ x_age80 , brfss_design ) ) )
+# system.time( print( svymean( ~ x_age80 , brfss_design ) ) )
 
-system.time( print( svymean( ~ x_age80 , brfss_replication_design ) ) )
+# system.time( print( svymean( ~ x_age80 , brfss_replication_design ) ) )
 brfss_design <- 
 	update( 
 		brfss_design ,
