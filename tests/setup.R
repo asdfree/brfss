@@ -29,7 +29,7 @@ variables_to_keep <-
 	
 brfss_df <- brfss_df[ variables_to_keep ]
 	
-brfss_design <-
+brfss_national_design <-
 	svydesign(
 		id = ~ x_psu ,
 		strata = ~ x_ststr ,
@@ -39,13 +39,18 @@ brfss_design <-
 	)
 # brfss_replication_design <-
 # 	as.svrepdesign( 
-# 		brfss_design ,
+# 		brfss_national_design ,
 # 		type = 'bootstrap'
 # 	)
 
-# system.time( print( svymean( ~ x_age80 , brfss_design ) ) )
+# system.time( print( svymean( ~ x_age80 , brfss_national_design ) ) )
 
 # system.time( print( svymean( ~ x_age80 , brfss_replication_design ) ) )
+brfss_design <-
+	subset(
+		brfss_national_design , 
+		x_state %in% 2 
+	)
 brfss_design <- 
 	update( 
 		brfss_design ,
@@ -177,7 +182,6 @@ result <-
 		~ no_doc_visit_due_to_cost ,
 		subset(
 			brfss_design ,
-			state_name %in% 'ALASKA' &
 			no_doc_visit_due_to_cost %in%
 				c( 'yes' , 'no' )
 		) ,
