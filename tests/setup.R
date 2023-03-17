@@ -168,14 +168,6 @@ glm_result <-
 	)
 
 summary( glm_result )
-library(srvyr)
-brfss_srvyr_design <- as_survey( brfss_design )
-brfss_srvyr_design %>%
-	summarize( mean = survey_mean( x_age80 ) )
-
-brfss_srvyr_design %>%
-	group_by( state_name ) %>%
-	summarize( mean = survey_mean( x_age80 ) )
 
 result <-
 	svymean(
@@ -193,3 +185,11 @@ stopifnot( round( confint( result )[ 1 , 2 ] , 3 ) == 0.122 )
 stopifnot( round( confint( result )[ 2 , 1 ] , 3 ) == 0.878 )
 stopifnot( round( confint( result )[ 2 , 2 ] , 3 ) == 0.906 )
 
+library(srvyr)
+brfss_srvyr_design <- as_survey( brfss_design )
+brfss_srvyr_design %>%
+	summarize( mean = survey_mean( x_age80 ) )
+
+brfss_srvyr_design %>%
+	group_by( state_name ) %>%
+	summarize( mean = survey_mean( x_age80 ) )
