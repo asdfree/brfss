@@ -5,7 +5,7 @@ library(haven)
 
 zip_tf <- tempfile()
 
-zip_url <- "https://www.cdc.gov/brfss/annual_data/2021/files/LLCP2021XPT.zip"
+zip_url <- "https://www.cdc.gov/brfss/annual_data/2022/files/LLCP2022XPT.zip"
 	
 download.file( zip_url , zip_tf , mode = 'wb' )
 
@@ -180,10 +180,10 @@ result <-
 		na.rm = TRUE
 	)
 
-stopifnot( round( confint( result )[ 1 , 1 ] , 3 ) == 0.094 )
-stopifnot( round( confint( result )[ 1 , 2 ] , 3 ) == 0.122 )
-stopifnot( round( confint( result )[ 2 , 1 ] , 3 ) == 0.878 )
-stopifnot( round( confint( result )[ 2 , 2 ] , 3 ) == 0.906 )
+stopifnot( round( confint( result )[ 1 , 1 ] , 3 ) == 0.092 )
+stopifnot( round( confint( result )[ 1 , 2 ] , 3 ) == 0.114 )
+stopifnot( round( confint( result )[ 2 , 1 ] , 3 ) == 0.886 )
+stopifnot( round( confint( result )[ 2 , 2 ] , 3 ) == 0.908 )
 
 library(srvyr)
 brfss_srvyr_design <- as_survey( brfss_design )
