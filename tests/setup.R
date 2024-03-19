@@ -19,9 +19,9 @@ brfss_df[ , 'one' ] <- 1
 # brfss_fn <- file.path( path.expand( "~" ) , "BRFSS" , "this_file.rds" )
 # saveRDS( brfss_df , file = brfss_fn , compress = FALSE )
 # brfss_df <- readRDS( brfss_fn )
-options( survey.lonely.psu = "adjust" )
-
 library(survey)
+
+options( survey.lonely.psu = "adjust" )
 
 variables_to_keep <-
 	c( 'one' , 'x_psu' , 'x_ststr' , 'x_llcpwt' , 'genhlth' , 'medcost1' , 
