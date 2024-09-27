@@ -5,7 +5,7 @@ library(haven)
 
 zip_tf <- tempfile()
 
-zip_url <- "https://www.cdc.gov/brfss/annual_data/2022/files/LLCP2022XPT.zip"
+zip_url <- "https://www.cdc.gov/brfss/annual_data/2023/files/LLCP2023XPT.zip"
 	
 download.file( zip_url , zip_tf , mode = 'wb' )
 
@@ -25,7 +25,7 @@ options( survey.lonely.psu = "adjust" )
 
 variables_to_keep <-
 	c( 'one' , 'x_psu' , 'x_ststr' , 'x_llcpwt' , 'genhlth' , 'medcost1' , 
-	'x_state' , 'x_age80' , 'nummen' , 'numadult' , 'x_hlthpln' )
+	'x_state' , 'x_age80' , 'physhlth' , 'menthlth' , 'x_hlthpl1' )
 	
 brfss_df <- brfss_df[ variables_to_keep ]
 	
@@ -63,6 +63,15 @@ brfss_design <-
 				levels = c( 1 , 2 , 7 , 9 ) , 
 				labels = c( "yes" , "no" , "dk" , "rf" ) 
 			) ,
+		
+		physhlth_days_not_good = 
+			ifelse( physhlth <= 30 , physhlth ,
+			ifelse( physhlth == 88 , 0 , NA ) ) ,
+			
+		menthlth_days_not_good = 
+			ifelse( menthlth <= 30 , menthlth ,
+			ifelse( menthlth == 88 , 0 , NA ) ) ,
+			
 		
 		state_name =
 		
@@ -121,12 +130,12 @@ svyby(
 	ci = TRUE 
 )
 svyratio( 
-	numerator = ~ nummen , 
-	denominator = ~ numadult , 
+	numerator = ~ physhlth_days_not_good , 
+	denominator = ~ menthlth_days_not_good , 
 	brfss_design ,
 	na.rm = TRUE
 )
-sub_brfss_design <- subset( brfss_design , x_hlthpln == 2 )
+sub_brfss_design <- subset( brfss_design , x_hlthpl1 == 2 )
 svymean( ~ x_age80 , sub_brfss_design )
 this_result <- svymean( ~ x_age80 , brfss_design )
 
@@ -180,11 +189,9 @@ result <-
 		na.rm = TRUE
 	)
 
-stopifnot( round( confint( result )[ 1 , 1 ] , 3 ) == 0.092 )
-stopifnot( round( confint( result )[ 1 , 2 ] , 3 ) == 0.114 )
-stopifnot( round( confint( result )[ 2 , 1 ] , 3 ) == 0.886 )
-stopifnot( round( confint( result )[ 2 , 2 ] , 3 ) == 0.908 )
-
+stopifnot( round( coef( result )[1] , 3 ) == 0.111 )
+stopifnot( round( confint( result )[ 1 , 1 ] , 3 ) == 0.098 )
+stopifnot( round( confint( result )[ 1 , 2 ] , 3 ) == 0.123 )
 library(srvyr)
 brfss_srvyr_design <- as_survey( brfss_design )
 brfss_srvyr_design %>%
