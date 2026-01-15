@@ -101,6 +101,7 @@ brfss_design <-
 					
 			)
 	)
+
 sum( weights( brfss_design , "sampling" ) != 0 )
 
 svyby( ~ one , ~ state_name , brfss_design , unwtd.count )
